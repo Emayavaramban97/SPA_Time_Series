@@ -1,0 +1,91 @@
+---
+title: "Time_series"
+author: "Emayavaramban"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Time Series
+
+```{r}
+library(readxl)
+library(tseries)#for acf adf pacf
+library(forecast)#for arima.test()
+#library(FitARMA)
+library(ggplot2)
+library(astsa)
+data <- read_excel("E:\\SPA\\Time series\\price.xlsx")
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+data
+```
+```{r}
+test <- unlist(data['first_diff'])
+adf.test(test[1:410])
+```
+```{r}
+```
+
+
+```{r}
+acf(na.omit(test))
+```
+
+```{r}
+pacf(na.omit(test))
+
+```
+```{r}
+trial <- na.omit(test)
+fit <- auto.arima(trial)
+fit
+```
+```{r}
+diff_52 <- na.omit(unlist(data['52_diff']))
+adf.test(diff_52)
+```
+```{r}
+fit_52 <- auto.arima(diff_52)
+fit_52
+fit_2 <- auto.arima(diff_2)
+fit_2
+Box.test(diff_2, lag = 52, type = "Ljung")
+```
+```{r}
+diff_2 <- na.omit(unlist(data['diff_2']))
+adf.test(diff_2)
+Box.Ljung.Test(diff_2, lag = 52)
+
+```
+```{r}
+init = data$PRICE
+data1=ts(init[1:400], start =1, frequency = 52 )
+fit <- auto.arima(data1)
+fit
+model_fir <- sarima(init[1:400],1,1,3,1,0,0,52)
+```
+```{r}
+pacf(init[1:400])
+```
+
+```{r}
+test_data <- data$first_diff[1:400]
+adf.test(test_data)
+plot(init[1:400],xlab = 'Weeks',ylab='Price')
+```
+```{r}
+adf.test(init[1:410])
+```
+```{r}
+```
+
+
